@@ -16,11 +16,11 @@ class Film extends Controller
      */
     public function index() : mixed
     {
-       $films = ModelsFilm::orderByDesc('created_at')->paginate(4);
-       $this->getUrlPicture($films,"storage/img/films");
-       return $films;
+        $films = ModelsFilm::orderByDesc('created_at')->paginate(4);
+        $this->getUrlPicture($films,"storage/img/films");
+        return $films;
     }
-    
+   
      /**
      * Получить один фильм c одобреными комменатриями
      */

@@ -114,6 +114,7 @@ Route::resource('/comments', CommentController::class)->only(['store', 'update',
 Route::prefix('/home')->group( function () {
     Route::get('/rating', [ HomeController::class, 'ratingOnHomePage' ]);
     Route::get('/ratingPage', [ HomeController::class, 'rating' ]);
+    Route::get('/search', [ HomeController::class, 'search' ]);
     Route::get('/oneElement/{slug}',[ HomeController::class, 'getOneElement']);
     Route::put('/rating/increase/{slug}',[ HomeController::class, 'increaseRating'])->middleware('auth');
     Route::put('/rating/decrease/{slug}',[ HomeController::class, 'decreaseRating'])->middleware('auth');

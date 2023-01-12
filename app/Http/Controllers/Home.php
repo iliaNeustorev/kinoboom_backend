@@ -7,6 +7,7 @@ use App\Models\Serial as ModelsSerial;
 use App\Models\Rating as ModelsRating;
 use App\Models\Comment as ModelsComment;
 use App\Enums\Comment\Status as CommentStatus;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class Home extends Controller
 {
@@ -33,7 +34,7 @@ class Home extends Controller
         } elseif ($serial != null){
             return $serial;
         } else {
-            return response()->json(['error'=>'элемент не найден'],400);
+            return response()->json(['error'=>'элемент не найден'], 400);
         }
     }
 
@@ -58,7 +59,7 @@ class Home extends Controller
     {
 
         $sort = $this->validFieldSort(request(), ['rating','year_release','name']);
-        return ModelsFilm::UnionSerials()->orderBy($sort['column'], $sort['direction'])->paginate(10);
+        return ModelsFilm::unionSerials()->orderBy($sort['column'], $sort['direction'])->paginate(10);
     }
 
      /**
@@ -113,5 +114,31 @@ class Home extends Controller
                 break;
         }
        return $model->save();
+    }
+
+     /**
+     *Функция для поиска фильма иили сериала используя Scout/Algolia
+     */
+    public function search()
+    {
+        $search = request()->search;
+        if($search == null){
+            return response('Пустая строка', 422);
+        }
+        $films = ModelsFilm::search($search)->get();
+        $serials = ModelsSerial::search($search)->get();
+        $collection = $films->concat($serials)->toArray();
+        $total = count($collection);
+        $per_page = 10;
+        $current_page = request()->page ?? 1;
+
+        $starting_point = ($current_page * $per_page) - $per_page;
+
+        $array = array_slice($collection, $starting_point, $per_page, true);
+        $result= new Paginator($array, $total, $per_page, $current_page, [
+            'path' => request()->url(),
+            'query' => request()->query(),
+        ]);
+        return $result;
     }
 }

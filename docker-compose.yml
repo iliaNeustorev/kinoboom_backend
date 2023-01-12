@@ -18,7 +18,6 @@ services:
             dockerfile: _docker/app/Dockerfile
         volumes:
             - ./:/var/www
-        user: 1000:1000
         depends_on:
             - db
         container_name: kinoboom_app
