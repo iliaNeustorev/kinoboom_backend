@@ -7,59 +7,61 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## О Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+В тестовом проекте используется laravel version v.9
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## установка Laravel
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1)Развернуть проект в docker согласно конфигурации docker-compose.yml
 
-## Learning Laravel
+```
+Поднять контейнеры командой docker-compose up -d
+Войти внутрь контейнера командой docker exec -it kinoboom_app bash
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2)Установка через Composer
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+Внутри контейнера composer create-project laravel/laravel kinoboom
+```
 
-## Laravel Sponsors
+3)Установка компонентов laravel для поиска Scout
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```
+Внутри контейнера composer require laravel/scout
+```
 
-### Premium Partners
+4)Установка драйвера поиска Algolia PHP SDK
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```
+Внутри контейнера composer require algolia/algoliasearch-client-php
+```
 
-## Contributing
+## Настройка соединения с базой данных
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Редактировать файл `/.env`:
 
-## Code of Conduct
+```
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=base64:PvB6aC68HuMjgrXZaZZn/MiDfux4ZZ9OGqQ9A6FgGuM=
+APP_DEBUG=true
+APP_URL=http://localhost::8876
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=kinoboom_base
+DB_USERNAME=root
+DB_PASSWORD=root
 
-## Security Vulnerabilities
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Настройка поиска
 
-## License
+1)Публикация файла конфигурации Scout в ваш каталог config
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# kinoboom_backend
+```
+php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
+```
