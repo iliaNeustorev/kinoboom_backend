@@ -42,7 +42,7 @@ class Like extends Controller
      /**
      * Поменять оценку 
      */
-    public function update(UserLikeUpdateRequest $request, $id)
+    public function update(UserLikeUpdateRequest $request,int $id)
     {
        $like = ModelsLike::where('user_id', auth()->id())->where('likable_type', $request->for)->where('likable_id',$id)->firstOrFail();
         if($request->method == 'dislike' && $like->status == Status::LIKE){
@@ -62,7 +62,7 @@ class Like extends Controller
      /**
      * Удалить оценку
      */
-    public function cancelRate(UserDeleteLikeRequest $request, $id)
+    public function cancelRate(UserDeleteLikeRequest $request,int $id)
     {
        $rate = ModelsLike::where('user_id', auth()->id())->where('likable_type', $request->for)->where('likable_id',$id)->firstOrFail();
        $rate->delete();

@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Film as ModelsFilm;
 use App\Models\Serial as ModelsSerial;
 use App\Models\Rating as ModelsRating;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\Comment as ModelsComment;
 use App\Enums\Comment\Status as CommentStatus;
-use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class Home extends Controller
 {
@@ -19,7 +19,7 @@ class Home extends Controller
      /**
      * Получить один фильм или сериал c одобреными коментариями по slug
      */
-    public function getOneElement($slug)
+    public function getOneElement(string $slug)
     {
         $film = ModelsFilm::where('slug', $slug)
             ->with(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])
@@ -57,15 +57,18 @@ class Home extends Controller
      */
     public function rating()
     {
-
         $sort = $this->validFieldSort(request(), ['rating','year_release','name']);
-        return ModelsFilm::unionSerials()->orderBy($sort['column'], $sort['direction'])->paginate(10);
+        $films = ModelsFilm::withCount(['ratings' => ModelsRating::userAppreciated()])->get();
+        $serials = ModelsSerial::withCount(['ratings' => ModelsRating::userAppreciated()])->get();
+        $collection = $films->concat($serials);
+        $sorted = $collection->sortBy([[$sort['column'],$sort['direction']]])->values()->all();
+        return $this->yourPaginator($sorted, 10, request());
     }
 
      /**
      * Увеличить рейтинг фильма или сериала на 0,01
      */
-    public function increaseRating($slug)
+    public function increaseRating(string $slug)
     {
         return $this->changeRating($slug, 'increase'); 
     }
@@ -73,7 +76,7 @@ class Home extends Controller
     /**
      * Уменишить рейтинг фильма или сериала на 0,01
      */
-    public function decreaseRating($slug)
+    public function decreaseRating(string $slug)
     {
         return $this->changeRating($slug, 'decrease');
     }
@@ -81,7 +84,7 @@ class Home extends Controller
      /**
      *Вспомогательная функция. Поиск элемента по slug и изменение его рейтинга в зависимости от метода
      */
-    protected function changeRating($slug, $method)
+    protected function changeRating(string $slug, string $method)
     {
        $film = ModelsFilm::where('slug', $slug)
         ->withCount(['ratings' => ModelsRating::userAppreciated()])
@@ -102,7 +105,7 @@ class Home extends Controller
     /**
      *Вспомогательная функция. Увеличить или уменьшить рейтинг
      */
-    protected function changeIncreaseOrdecrease($model, $method)
+    protected function changeIncreaseOrdecrease(Model $model, string $method)
     {
         $model->ratings()->create(['user_id' => auth()->id(), 'appreciated' => true]);
         switch ($method) {
@@ -128,17 +131,6 @@ class Home extends Controller
         $films = ModelsFilm::search($search)->get();
         $serials = ModelsSerial::search($search)->get();
         $collection = $films->concat($serials)->toArray();
-        $total = count($collection);
-        $per_page = 10;
-        $current_page = request()->page ?? 1;
-
-        $starting_point = ($current_page * $per_page) - $per_page;
-
-        $array = array_slice($collection, $starting_point, $per_page, true);
-        $result= new Paginator($array, $total, $per_page, $current_page, [
-            'path' => request()->url(),
-            'query' => request()->query(),
-        ]);
-        return $result;
+        return $this->yourPaginator($collection, 10, request());
     }
 }

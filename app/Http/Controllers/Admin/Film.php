@@ -14,7 +14,7 @@ class Film extends Controller
     /**
      * Вернуть коллекцию моделей Film и количество и удаленных
      */
-    public function index() : mixed
+    public function index()
     {
         $sort = $this->validFieldSort(request(), ['rating','year_release','name','slug','created_at']);
         $films = ModelsFilm::orderBy($sort['column'], $sort['direction'])->paginate(5);
@@ -48,7 +48,7 @@ class Film extends Controller
     /**
      * Вернуть одну модель Film по id
      */
-    public function show($id) : mixed
+    public function show(int $id) : object
     {
         $film = ModelsFilm::where('id', $id)->get();
         if($film->isEmpty())
@@ -65,7 +65,7 @@ class Film extends Controller
     /**
      * Обновить модель Film
      */
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request,int $id)
     {
         $data = $request->validated();
         $film = ModelsFilm::findOrFail($id);
@@ -92,7 +92,7 @@ class Film extends Controller
     /**
      * Удалить одну модель Film
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         ModelsFilm::findOrFail($id)->delete();
         return response()->json(['ОК'],200);

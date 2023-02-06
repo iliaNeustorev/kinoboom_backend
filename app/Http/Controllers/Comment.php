@@ -49,7 +49,7 @@ class Comment extends Controller
     /**
      * Изменить сообщение
      */
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request,int $id)
     {
         $comment = ModelsComment::findOrFail($id);
 
@@ -65,7 +65,7 @@ class Comment extends Controller
     /**
      * Удалить сообщение
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $comment =  ModelsComment::findOrfail($id);
 

@@ -19,12 +19,14 @@ class Login extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        $user = $request->user()->toArray();
+        $user = request()->user();
+        $user = $user->with('roles:id,name')->find($user->id)->toArray();
         $user['status'] = $request->user()->status->text();
+        $user['admin'] = Gate::check('admin');
         $user['urlPicture'] = url('storage/img/profile/' . $user['picture']);
         $user['likes'] = $request->user()->likes()->where('status', LikeStatus::LIKE)->pluck('likable_type','likable_id');
         $user['dislikes'] = $request->user()->likes()->where('status', LikeStatus::DISLIKE)->pluck('likable_type','likable_id');
-        return $this->checkAdmin($user);
+        return $user;
        
     }
 
@@ -43,26 +45,17 @@ class Login extends Controller
     }
     
       /**
-     * Получить юзера
+     * Получить юзера c ролями
      */
-    public function getUser(Request $request)
+    public function getUser(Request $request) : array
     {
-        $user = request()->user()->toArray();
+        $user = request()->user();
+        $user = $user->with('roles:id,name')->find($user->id)->toArray();
+        $user['admin'] = Gate::check('admin');
         $user['status'] = $request->user()->status->text();
         $user['urlPicture'] = url('storage/img/profile/' . $user['picture']);
         $user['likes'] = $request->user()->likes()->where('status', LikeStatus::LIKE)->pluck('likable_type','likable_id');
         $user['dislikes'] = $request->user()->likes()->where('status', LikeStatus::DISLIKE)->pluck('likable_type','likable_id');
-        return $this->checkAdmin($user);
-    }
-
-     /**
-     * Проверить пользователья на права админа
-     */
-    private function checkAdmin(array $user) : array
-    {
-        $user['admin'] = Gate::check('admin');
-        $user['adminMain'] = Gate::check('admin-main');
-        $user['moderator'] = Gate::check('admin-moderator');
         return $user;
     }
 }

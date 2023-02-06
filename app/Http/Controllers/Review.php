@@ -10,7 +10,7 @@ class Review extends Controller
 {
     public function index()
     {
-       return ModelsReview::getAccept()->paginate(1);
+       return ModelsReview::getAccept()->paginate(5);
     }
 
     public function store(UserReview $request)

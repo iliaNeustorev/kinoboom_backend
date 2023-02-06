@@ -14,7 +14,7 @@ class Film extends Controller
      /**
      * Получить все фильмы с url адресом картинки
      */
-    public function index() : mixed
+    public function index() : object
     {
         $films = ModelsFilm::orderByDesc('created_at')->paginate(4);
         $this->getUrlPicture($films,"storage/img/films");
@@ -24,7 +24,7 @@ class Film extends Controller
      /**
      * Получить один фильм c одобреными комменатриями
      */
-    public function show($slug) : mixed
+    public function show(string $slug) : object
     {
         return ModelsFilm::where('slug', $slug)
             ->with(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])

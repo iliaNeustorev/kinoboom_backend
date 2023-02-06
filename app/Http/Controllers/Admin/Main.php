@@ -24,7 +24,7 @@ class Main extends Controller
     /**
      * Получить получить роли юзеров и все роли
      */
-    public function getRoles($id)
+    public function getRoles(int $id)
     {
         $AllRoles = ModelsRole::get()->toArray();
         $user = ModelsUser::with('roles:id')->where('id',$id)->get()->pluck('roles')->flatten();
@@ -37,7 +37,7 @@ class Main extends Controller
     /**
      * Обновить роль пользователя
      */
-    public function updateRole(RoleRequest $request, $id)
+    public function updateRole(RoleRequest $request,int $id)
     {
         $user = ModelsUser::findOrFail($id);
         $user->roles()->sync($request['roles']);
@@ -47,7 +47,7 @@ class Main extends Controller
      /**
      * Заблокировать пользователя
      */
-    public function blockedUser(Request $request, $id)
+    public function blockedUser(Request $request,int $id)
     {
        $data = $request->validate([
             'check' => 'required|boolean',

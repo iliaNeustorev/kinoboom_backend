@@ -11,7 +11,7 @@ class Review extends Controller
     /**
      * Получить новые отзывы
      */
-    public function index() : mixed
+    public function index() : object
     {
         return ModelsReview::getNew()->orderBy('created_at','desc')->paginate(5);
     }
@@ -19,7 +19,7 @@ class Review extends Controller
     /**
      * Одобрить отзыв
      */
-    public function accept($id)
+    public function accept(int $id)
     {
         $review = ModelsReview::findOrFail($id);
         $review->status = Status::ACCEPT;
@@ -30,11 +30,17 @@ class Review extends Controller
     /**
      * Отклонить отзыв
      */
-    public function decline($id)
+    public function decline(int $id)
     {
         $review = ModelsReview::findOrFail($id);
         $review->status = Status::DECLINE;
         $review->save();
+        return response()->json(['OK'],200);
+    }
+
+    public function delete(int $id)
+    {
+        ModelsReview::findOrFail($id)->delete();
         return response()->json(['OK'],200);
     }
 }

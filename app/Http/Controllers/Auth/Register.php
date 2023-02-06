@@ -16,7 +16,7 @@ class Register extends Controller
     /**
      * Зарегистировать пользователя
      */
-    public function register(RegisterRequest $request) : array
+    public function register(RegisterRequest $request)
     {
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
@@ -27,9 +27,6 @@ class Register extends Controller
         $user->roles()->sync($roleIdUser);
 
         Auth::login($user);
-        $user = $request->user()->refresh()->toArray();
-        $user['status'] = $request->user()->status->text();
-        $user['urlPicture'] = url('storage/img/profile/' . $user['picture']);
-        return $user;
+        return response()->json(['status' => 200]);
     }
 }

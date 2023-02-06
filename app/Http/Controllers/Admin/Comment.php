@@ -52,7 +52,7 @@ class Comment extends Controller
     /**
      * Принять комментарий
      */
-    public function accept($id)
+    public function accept(int $id)
     {
         $comment = ModelsComment::findOrFail($id);
         $comment->status = Status::ACCEPT;
@@ -63,7 +63,7 @@ class Comment extends Controller
     /**
      * Отклонить комментарий
      */
-    public function decline($id)
+    public function decline(int $id)
     {
         $comment = ModelsComment::findOrFail($id);
         $comment->status = Status::DECLINE;
@@ -74,7 +74,7 @@ class Comment extends Controller
      /**
      * Удалить комментарий
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         ModelsComment::findOrFail($id)->delete();
         return response()->json(['OK'],200);

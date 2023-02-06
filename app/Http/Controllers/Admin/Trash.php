@@ -17,7 +17,7 @@ class Trash extends Controller
         $sort = $this->validFieldSort(request(), ['rating','year_release','name','slug','deleted_at']);
         return ModelsFilm::onlyTrashed()
             ->orderBy($sort['column'], $sort['direction'])
-            ->paginate(10);
+            ->paginate(5);
     }
 
     /**
@@ -28,13 +28,13 @@ class Trash extends Controller
         $sort = $this->validFieldSort(request(), ['rating','year_release','name','slug','deleted_at']);
         return ModelsSerial::onlyTrashed()
             ->orderBy($sort['column'], $sort['direction'])
-            ->paginate(1);
+            ->paginate(5);
     }
 
      /**
      * Удалить навсегда один фильм из БД по id
      */
-    public function deleteForeverFilm($id)
+    public function deleteForeverFilm(int $id)
     {
         ModelsFilm::onlyTrashed()->findOrFail($id)->forceDelete();
         return response()->json(['OK'], 200);
@@ -43,7 +43,7 @@ class Trash extends Controller
      /**
      * Удалить навсегда один сериал из БД по id
      */
-    public function deleteForeverSerial($id)
+    public function deleteForeverSerial(int $id)
     {
         ModelsSerial::onlyTrashed()->findOrFail($id)->forceDelete();
         return response()->json(['OK'], 200);

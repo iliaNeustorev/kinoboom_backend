@@ -13,7 +13,7 @@ class Serial extends Controller
      /**
      * Получить все сериалы с url адресом картинки
      */
-    public function index() : mixed
+    public function index() : object
     {
         $serials = ModelsSerial::orderByDesc('created_at')->paginate(4);
         $this->getUrlPicture($serials,"storage/img/serials");
@@ -23,7 +23,7 @@ class Serial extends Controller
      /**
      * Получить один сериал с одобреными комменатриями
      */
-    public function show($slug) : mixed
+    public function show(string $slug) : object
     {
         return ModelsSerial::where('slug', $slug)
             ->with(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])

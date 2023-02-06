@@ -17,7 +17,7 @@ class Serial extends Controller
     public function index() : mixed
     {
         $sort = $this->validFieldSort(request(), ['rating','year_release','name','slug','created_at']);
-        $serials = ModelsSerial::orderBy($sort['column'], $sort['direction'])->paginate(10);
+        $serials = ModelsSerial::orderBy($sort['column'], $sort['direction'])->paginate(5);
         $this->getUrlPicture($serials,"storage/img/serials");
         $count = ModelsSerial::onlyTrashed()->count();
         return compact('serials','count');
@@ -48,7 +48,7 @@ class Serial extends Controller
     /**
      * Вернуть одну модель Serial по id
      */
-    public function show($id) : mixed
+    public function show(int $id) : mixed
     {
         $serial = ModelsSerial::where('id', $id)->get();
         if($serial->isEmpty())
@@ -65,7 +65,7 @@ class Serial extends Controller
     /**
      * Обновить одну модель Serial
      */
-    public function update(UpdateRequest $request, $id)
+    public function update(UpdateRequest $request,int $id)
     {
         $data = $request->validated();
         $serial = ModelsSerial::findOrFail($id);
@@ -92,7 +92,7 @@ class Serial extends Controller
     /**
      * Удалить одну модель Serial
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         ModelsSerial::findOrFail($id)->delete();
         return true;

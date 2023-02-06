@@ -64,6 +64,7 @@ Route::prefix('/admin')->middleware(['auth','verified','can:admin'])->group(func
                 Route::get('/getNew', [ AdminReviewController::class, 'index' ]);
                 Route::put('/accept/{id}', [ AdminReviewController::class, 'accept' ]);
                 Route::put('/decline/{id}', [ AdminReviewController::class, 'decline' ]);
+                Route::delete('/delete/{id}', [ AdminReviewController::class, 'delete' ]);
             });
     
         Route::prefix('/users')->group( function () {
