@@ -16,7 +16,9 @@ class Film extends Controller
      */
     public function index() : object
     {
-        $films = ModelsFilm::orderByDesc('created_at')->paginate(4);
+        $films = ModelsFilm::orderByDesc('created_at')
+            ->withCount(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])
+            ->paginate(4);
         $this->getUrlPicture($films,"storage/img/films");
         return $films;
     }

@@ -29,7 +29,7 @@ class Password extends Controller
     }
 
     /**
-     * Изменить пароль
+     * Восстановить пароль
      */
     public function resetPassword(ResetPasswordRequest $request)
     {

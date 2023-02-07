@@ -15,7 +15,9 @@ class Serial extends Controller
      */
     public function index() : object
     {
-        $serials = ModelsSerial::orderByDesc('created_at')->paginate(4);
+        $serials = ModelsSerial::orderByDesc('created_at')
+            ->withCount(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])
+            ->paginate(4);
         $this->getUrlPicture($serials,"storage/img/serials");
         return $serials;
     }
