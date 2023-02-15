@@ -33,7 +33,7 @@ use App\Http\Controllers\Auth\Verification as VerificationController;
 Route::middleware('auth:sanctum')->get('/user', [ LoginController::class, 'getUser' ]);
 
 Route::middleware('auth:sanctum')->group( function() {
-    Route::get('verify-email/{id}/{hash}', [ VerificationController::class, 'verify' ])->name('verification.verify');
+    Route::get('verify-email/{id}/{hash}', [ VerificationController::class, 'verify' ])->middleware('signed')->name('verification.verify');
     Route::post('email/verification-notification', [ VerificationController::class, 'sendVerificationEmail' ])->middleware('throttle:6,1');
 });
 
