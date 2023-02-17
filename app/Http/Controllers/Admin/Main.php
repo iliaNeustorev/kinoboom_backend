@@ -17,7 +17,7 @@ class Main extends Controller
      */
     public function users()
     {
-        $sort = $this->validFieldSort(request(), ['created_at','name','email','blocked']);
+        $sort = parent::validFieldSort(request(), ['created_at','name','email','blocked']);
         return ModelsUser::with('roles:id,description')->orderBy($sort['column'], $sort['direction'])->paginate(10);
     }
 

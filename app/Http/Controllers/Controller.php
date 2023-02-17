@@ -18,7 +18,7 @@ class Controller extends BaseController
     /**
      * Сформировать url картинки
      */
-    protected function getUrlPicture(object $collection,string $pathStorage)
+    protected function getUrlPicture(object $collection, string $pathStorage)
     {
        return $collection->transform(function($film) use ($pathStorage){
             $film->urlPicture = url("$pathStorage/$film->picture");
@@ -29,7 +29,7 @@ class Controller extends BaseController
      /**
      * Валидировать поле сориторовки
      */
-    protected function validFieldSort(Request $request,array $array)
+    protected function validFieldSort(Request $request, array $array)
     {
         return Validator::make($request->all(), [
             'direction' => 'required|in:asc,desc',

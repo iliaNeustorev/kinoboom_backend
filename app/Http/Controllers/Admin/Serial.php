@@ -16,9 +16,9 @@ class Serial extends Controller
      */
     public function index() : mixed
     {
-        $sort = $this->validFieldSort(request(), ['rating','year_release','name','slug','created_at']);
+        $sort = parent::validFieldSort(request(), ['rating','year_release','name','slug','created_at']);
         $serials = ModelsSerial::orderBy($sort['column'], $sort['direction'])->paginate(5);
-        $this->getUrlPicture($serials,"storage/img/serials");
+        parent::getUrlPicture($serials,"storage/img/serials");
         $count = ModelsSerial::onlyTrashed()->count();
         return compact('serials','count');
     }
@@ -57,7 +57,7 @@ class Serial extends Controller
         } 
         else 
         {
-         $this->getUrlPicture($serial,"storage/img/serials");
+         parent::getUrlPicture($serial,"storage/img/serials");
          return $serial->shift();
         }
     }

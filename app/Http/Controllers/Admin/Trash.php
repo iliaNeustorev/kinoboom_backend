@@ -14,7 +14,7 @@ class Trash extends Controller
      */
     public function indexFilms()
     {
-        $sort = $this->validFieldSort(request(), ['rating','year_release','name','slug','deleted_at']);
+        $sort = parent::validFieldSort(request(), ['rating','year_release','name','slug','deleted_at']);
         return ModelsFilm::onlyTrashed()
             ->orderBy($sort['column'], $sort['direction'])
             ->paginate(5);
@@ -25,7 +25,7 @@ class Trash extends Controller
      */
     public function indexSerials()
     {
-        $sort = $this->validFieldSort(request(), ['rating','year_release','name','slug','deleted_at']);
+        $sort = parent::validFieldSort(request(), ['rating','year_release','name','slug','deleted_at']);
         return ModelsSerial::onlyTrashed()
             ->orderBy($sort['column'], $sort['direction'])
             ->paginate(5);

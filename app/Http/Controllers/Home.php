@@ -57,12 +57,12 @@ class Home extends Controller
      */
     public function rating()
     {
-        $sort = $this->validFieldSort(request(), ['rating','year_release','name']);
+        $sort = parent::validFieldSort(request(), ['rating','year_release','name']);
         $films = ModelsFilm::withCount(['ratings' => ModelsRating::userAppreciated()])->get();
         $serials = ModelsSerial::withCount(['ratings' => ModelsRating::userAppreciated()])->get();
         $collection = $films->concat($serials);
         $sorted = $collection->sortBy([[$sort['column'],$sort['direction']]])->values()->all();
-        return $this->yourPaginator($sorted, 10, request());
+        return parent::yourPaginator($sorted, 10, request());
     }
 
      /**
@@ -131,6 +131,6 @@ class Home extends Controller
         $films = ModelsFilm::search($search)->get();
         $serials = ModelsSerial::search($search)->get();
         $collection = $films->concat($serials)->toArray();
-        return $this->yourPaginator($collection, 10, request());
+        return parent::yourPaginator($collection, 10, request());
     }
 }

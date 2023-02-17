@@ -14,7 +14,7 @@ class Comment extends Controller
      */
     public function getNew()
     {
-        $sort = $this->validFieldSort(request(), ['created_at','commentable_type']);
+        $sort = parent::validFieldSort(request(), ['created_at','commentable_type']);
         return ModelsComment::GetWithStatusForAdmin(Status::NEW)
             ->orderBy($sort['column'], $sort['direction'])
             ->paginate(5);
@@ -25,7 +25,7 @@ class Comment extends Controller
      */
     public function getChanged()
     {
-        $sort = $this->validFieldSort(request(), ['created_at','commentable_type']);
+        $sort = parent::validFieldSort(request(), ['created_at','commentable_type']);
         return ModelsComment::GetWithStatusForAdmin(Status::CHANGED)
             ->orderBy($sort['column'], $sort['direction'])
             ->paginate(5);
@@ -36,7 +36,7 @@ class Comment extends Controller
      */
     public function getDeclined()
     {
-        $sort = $this->validFieldSort(request(), ['created_at','commentable_type']);
+        $sort = parent::validFieldSort(request(), ['created_at','commentable_type']);
         return ModelsComment::GetWithStatusForAdmin(Status::DECLINE)
             ->orderBy($sort['column'], $sort['direction'])
             ->paginate(5);
