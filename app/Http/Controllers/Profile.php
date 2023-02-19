@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +18,7 @@ class Profile extends Controller
     /**
      * Изменить имя пользователя
      */
-    public function changeName(UserNameChangeRequest $request)
+    public function changeName(UserNameChangeRequest $request) : JsonResponse
     {
         $user = request()->user();
         $newName = $request->validated();
@@ -28,7 +29,7 @@ class Profile extends Controller
     /**
      * Изменить пароль
      */
-    public function changePassword(ChangePasswordRequest $request) 
+    public function changePassword(ChangePasswordRequest $request) : JsonResponse
     {
         $request->user()->forceFill([
             'password' => Hash::make($request->password),
@@ -42,7 +43,7 @@ class Profile extends Controller
     /**
      * Изменить аватар пользователя
      */
-    public function changeAvatar(ChangeAvatarRequest $request)
+    public function changeAvatar(ChangeAvatarRequest $request) : JsonResponse
     {
         $user = request()->user();
         $file = $request->picture;
@@ -59,7 +60,7 @@ class Profile extends Controller
     /**
      * Удалить аватар пользователя
      */
-    public function deleteAvatar(Request $request)
+    public function deleteAvatar(Request $request) : JsonResponse
     {
         $user = $request->user();
         if($user->picture != 'nopicture.png')

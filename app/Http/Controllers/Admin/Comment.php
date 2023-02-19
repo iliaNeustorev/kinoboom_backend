@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\Comment\Status;
+use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Models\Comment as ModelsComment;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Comment extends Controller
 {
@@ -12,7 +14,7 @@ class Comment extends Controller
     /**
      * Получить новые комментарии
      */
-    public function getNew()
+    public function getNew() : LengthAwarePaginator
     {
         $sort = parent::validFieldSort(request(), ['created_at','commentable_type']);
         return ModelsComment::GetWithStatusForAdmin(Status::NEW)
@@ -23,7 +25,7 @@ class Comment extends Controller
     /**
      * Получить измененые комментарии
      */
-    public function getChanged()
+    public function getChanged() : LengthAwarePaginator
     {
         $sort = parent::validFieldSort(request(), ['created_at','commentable_type']);
         return ModelsComment::GetWithStatusForAdmin(Status::CHANGED)
@@ -34,7 +36,7 @@ class Comment extends Controller
     /**
      * Получить отклоненые комментарии
      */
-    public function getDeclined()
+    public function getDeclined() : LengthAwarePaginator
     {
         $sort = parent::validFieldSort(request(), ['created_at','commentable_type']);
         return ModelsComment::GetWithStatusForAdmin(Status::DECLINE)
@@ -42,7 +44,7 @@ class Comment extends Controller
             ->paginate(5);
     }
 
-    public function getCounts()
+    public function getCounts() : array
     {
         $newCount = ModelsComment::where('status', Status::NEW)->count();
         $changedCount = ModelsComment::where('status', Status::CHANGED)->count();
@@ -52,7 +54,7 @@ class Comment extends Controller
     /**
      * Принять комментарий
      */
-    public function accept(int $id)
+    public function accept(int $id) : JsonResponse
     {
         $comment = ModelsComment::findOrFail($id);
         $comment->status = Status::ACCEPT;
@@ -63,7 +65,7 @@ class Comment extends Controller
     /**
      * Отклонить комментарий
      */
-    public function decline(int $id)
+    public function decline(int $id) : JsonResponse
     {
         $comment = ModelsComment::findOrFail($id);
         $comment->status = Status::DECLINE;
@@ -74,7 +76,7 @@ class Comment extends Controller
      /**
      * Удалить комментарий
      */
-    public function destroy(int $id)
+    public function destroy(int $id) : JsonResponse
     {
         ModelsComment::findOrFail($id)->delete();
         return response()->json(['OK'],200);

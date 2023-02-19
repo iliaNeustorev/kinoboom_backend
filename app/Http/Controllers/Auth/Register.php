@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\Role as ModelsRole;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class Register extends Controller
     /**
      * Зарегистировать пользователя
      */
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request) : JsonResponse
     {
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);

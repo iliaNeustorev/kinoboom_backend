@@ -25,7 +25,7 @@ class Serial extends Controller
      /**
      * Получить один сериал с одобреными комменатриями
      */
-    public function show(string $slug) : object
+    public function show(string $slug) : ModelsSerial
     {
         return ModelsSerial::where('slug', $slug)
             ->with(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])

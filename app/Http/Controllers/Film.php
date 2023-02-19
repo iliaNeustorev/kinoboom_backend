@@ -26,12 +26,12 @@ class Film extends Controller
      /**
      * Получить один фильм c одобреными комменатриями
      */
-    public function show(string $slug) : object
+    public function show(string $slug) : ModelsFilm
     {
         return ModelsFilm::where('slug', $slug)
-            ->with(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])
-            ->withCount(['ratings' => ModelsRating::userAppreciated()])
-            ->firstOrFail();
+                ->with(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])
+                ->withCount(['ratings' => ModelsRating::userAppreciated()])
+                ->firstOrFail();
     }
 
 }

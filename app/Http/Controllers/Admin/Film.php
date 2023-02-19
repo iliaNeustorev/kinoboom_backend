@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Http\JsonResponse;
 use App\Models\Film as ModelsFilm;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -14,7 +15,7 @@ class Film extends Controller
     /**
      * Вернуть коллекцию моделей Film и количество и удаленных
      */
-    public function index()
+    public function index() : array
     {
         $sort = parent::validFieldSort(request(), ['rating','year_release','name','slug','created_at']);
         $films = ModelsFilm::orderBy($sort['column'], $sort['direction'])->paginate(5);
@@ -26,7 +27,7 @@ class Film extends Controller
     /**
      * Создать модель Film
      */
-    public function store(SaveRequest $request)
+    public function store(SaveRequest $request) : JsonResponse
     {
         $data = $request->validated();
         
@@ -65,7 +66,7 @@ class Film extends Controller
     /**
      * Обновить модель Film
      */
-    public function update(UpdateRequest $request,int $id)
+    public function update(UpdateRequest $request,int $id) : JsonResponse
     {
         $data = $request->validated();
         $film = ModelsFilm::findOrFail($id);
@@ -86,25 +87,25 @@ class Film extends Controller
                 $data['picture'] = $film->picture;
             }
         $film->update($data);
-        return response()->json(['ОК'],200);
+        return response()->json(['ОК'], 200);
     }
 
     /**
      * Удалить одну модель Film
      */
-    public function destroy(int $id)
+    public function destroy(int $id) : JsonResponse
     {
         ModelsFilm::findOrFail($id)->delete();
-        return response()->json(['ОК'],200);
+        return response()->json(['ОК'], 200);
     }
 
     /**
      * Удалить несколько моделей Film
      */
-    public function massDestroy(MassDeleteRequest $request)
+    public function massDestroy(MassDeleteRequest $request) : JsonResponse
     {
         $data = $request->validated();
         ModelsFilm::destroy($data['idForDelete']);
-        return response()->json(['ОК'],200);
+        return response()->json(['ОК'], 200);
     }
 }

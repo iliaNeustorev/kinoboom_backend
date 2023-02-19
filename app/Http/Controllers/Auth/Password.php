@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\PasswordReset;
@@ -15,7 +16,7 @@ class Password extends Controller
     /**
      * Восстановить пароль
      */
-    public function forgotPassword(Request $request)
+    public function forgotPassword(Request $request) : JsonResponse
     {
         $request->validate(['email' => 'required|email']);
 
@@ -31,7 +32,7 @@ class Password extends Controller
     /**
      * Восстановить пароль
      */
-    public function resetPassword(ResetPasswordRequest $request)
+    public function resetPassword(ResetPasswordRequest $request) : JsonResponse
     {
         $data = $request->validated();
         $status = FacadePassword::reset(

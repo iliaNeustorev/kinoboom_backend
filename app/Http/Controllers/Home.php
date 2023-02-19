@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use App\Models\Film as ModelsFilm;
 use App\Models\Serial as ModelsSerial;
 use App\Models\Rating as ModelsRating;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Comment as ModelsComment;
 use App\Enums\Comment\Status as CommentStatus;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class Home extends Controller
 {
@@ -19,7 +22,7 @@ class Home extends Controller
      /**
      * Получить один фильм или сериал c одобреными коментариями по slug
      */
-    public function getOneElement(string $slug)
+    public function getOneElement(string $slug) : object
     {
         $film = ModelsFilm::where('slug', $slug)
             ->with(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])
@@ -41,7 +44,7 @@ class Home extends Controller
      /**
      * Сформировать таблицу сериалов и фильмов по рейтингу и вывести первые 5
      */
-    public function ratingOnHomePage()
+    public function ratingOnHomePage() : Collection
     {
         $serial = ModelsSerial::get()->mapWithKeys(function ($item, $key) {
             return [ $key => ['name' => $item->name, 'rating' => $item->rating,'slug' => $item->slug ]];
@@ -55,7 +58,7 @@ class Home extends Controller
     /**
      * Сформировать таблицу сериалов и фильмов по рейтингу и вывести по 10
      */
-    public function rating()
+    public function rating() : LengthAwarePaginator
     {
         $sort = parent::validFieldSort(request(), ['rating','year_release','name']);
         $films = ModelsFilm::withCount(['ratings' => ModelsRating::userAppreciated()])->get();
@@ -68,23 +71,23 @@ class Home extends Controller
      /**
      * Увеличить рейтинг фильма или сериала на 0,01
      */
-    public function increaseRating(string $slug)
+    public function increaseRating(string $slug) : JsonResponse
     {
-        return $this->changeRating($slug, 'increase'); 
+        return self::changeRating($slug, 'increase'); 
     }
 
     /**
      * Уменишить рейтинг фильма или сериала на 0,01
      */
-    public function decreaseRating(string $slug)
+    public function decreaseRating(string $slug) : JsonResponse
     {
-        return $this->changeRating($slug, 'decrease');
+        return self::changeRating($slug, 'decrease');
     }
 
      /**
      *Вспомогательная функция. Поиск элемента по slug и изменение его рейтинга в зависимости от метода
      */
-    protected function changeRating(string $slug, string $method)
+    protected function changeRating(string $slug, string $method) : JsonResponse
     {
        $film = ModelsFilm::where('slug', $slug)
         ->withCount(['ratings' => ModelsRating::userAppreciated()])
@@ -93,9 +96,9 @@ class Home extends Controller
         ->withCount(['ratings' => ModelsRating::userAppreciated()])
         ->first();
        if($film != null && $film->ratings_count == 0){
-           $this->changeIncreaseOrdecrease($film, $method);
+           self::changeIncreaseOrdecrease($film, $method);
         } elseif ($serial != null && $serial->ratings_count == 0){
-           $this->changeIncreaseOrdecrease($serial, $method);
+           self::changeIncreaseOrdecrease($serial, $method);
         } else {
             return response()->json(['error' => 'Рейтинг поставлен'], 400);
         }
@@ -105,7 +108,7 @@ class Home extends Controller
     /**
      *Вспомогательная функция. Увеличить или уменьшить рейтинг
      */
-    protected function changeIncreaseOrdecrease(Model $model, string $method)
+    protected function changeIncreaseOrdecrease(Model $model, string $method) : bool
     {
         $model->ratings()->create(['user_id' => auth()->id(), 'appreciated' => true]);
         switch ($method) {
@@ -122,7 +125,7 @@ class Home extends Controller
      /**
      *Функция для поиска фильма иили сериала используя Scout/Algolia
      */
-    public function search()
+    public function search() : LengthAwarePaginator
     {
         $search = request()->search;
         if($search == null){

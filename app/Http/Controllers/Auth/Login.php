@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
@@ -33,7 +34,7 @@ class Login extends Controller
       /**
      * разлогинится
      */
-    public function logout(Request $request)
+    public function logout(Request $request) : JsonResponse
     {
         Auth::logout();
 

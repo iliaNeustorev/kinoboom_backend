@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\Verified;
 use App\Http\Controllers\Controller;
 use App\Enums\User\Status as UserStatus;
@@ -14,7 +15,7 @@ class Verification extends Controller
     /**
      * Сделать адрес юзера верефицированым
      */
-    public function verify(EmailVerificationRequest $request)
+    public function verify(EmailVerificationRequest $request) : JsonResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
             return response()->json([
@@ -36,7 +37,7 @@ class Verification extends Controller
     /**
      * Повторно отправить сообщение на email.
      */
-    public function sendVerificationEmail(Request $request)
+    public function sendVerificationEmail(Request $request) : JsonResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
             throw ValidationException::withMessages([

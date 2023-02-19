@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Like\Status;
+use Illuminate\Http\JsonResponse;
 use App\Models\Like as ModelsLike;
 use App\Models\Review as ModelsReview;
 use App\Models\Comment as ModelsComment;
@@ -20,7 +21,7 @@ class Like extends Controller
       /**
      * Добавить оценку like к FOR_MODELS
      */
-    public function like(UserLikeRequest $request)
+    public function like(UserLikeRequest $request) : JsonResponse
     {
         $modelName = self::FOR_MODELS[$request->for];
         $model = $modelName::findOrFail($request->id);
@@ -31,7 +32,7 @@ class Like extends Controller
      /**
      * Добавить оценку dislike к FOR_MODELS
      */
-    public function dislike(UserLikeRequest $request)
+    public function dislike(UserLikeRequest $request) : JsonResponse
     {
         $modelName = self::FOR_MODELS[$request->for];
         $model = $modelName::findOrFail($request->id);
@@ -42,7 +43,7 @@ class Like extends Controller
      /**
      * Поменять оценку 
      */
-    public function update(UserLikeUpdateRequest $request,int $id)
+    public function update(UserLikeUpdateRequest $request, int $id) : JsonResponse
     {
        $like = ModelsLike::where('user_id', auth()->id())->where('likable_type', $request->for)->where('likable_id',$id)->firstOrFail();
         if($request->method == 'dislike' && $like->status == Status::LIKE){
@@ -62,7 +63,7 @@ class Like extends Controller
      /**
      * Удалить оценку
      */
-    public function cancelRate(UserDeleteLikeRequest $request,int $id)
+    public function cancelRate(UserDeleteLikeRequest $request, int $id) : JsonResponse
     {
        $rate = ModelsLike::where('user_id', auth()->id())->where('likable_type', $request->for)->where('likable_id',$id)->firstOrFail();
        $rate->delete();

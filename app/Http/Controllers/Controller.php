@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -18,7 +19,7 @@ class Controller extends BaseController
     /**
      * Сформировать url картинки
      */
-    protected function getUrlPicture(object $collection, string $pathStorage)
+    protected function getUrlPicture(Paginator $collection, string $pathStorage) : Collection
     {
        return $collection->transform(function($film) use ($pathStorage){
             $film->urlPicture = url("$pathStorage/$film->picture");
@@ -29,7 +30,7 @@ class Controller extends BaseController
      /**
      * Валидировать поле сориторовки
      */
-    protected function validFieldSort(Request $request, array $array)
+    protected function validFieldSort(Request $request, array $array) : array
     {
         return Validator::make($request->all(), [
             'direction' => 'required|in:asc,desc',
@@ -40,7 +41,8 @@ class Controller extends BaseController
     /**
      * Функция для своей пагинации
      */
-    protected function yourPaginator(array $collection, int $per_page, Request $request){
+    protected function yourPaginator(array $collection, int $per_page, Request $request) : Paginator
+    {
         $total = count($collection);
         $per_page = $per_page;
         $current_page = $request->page ?? 1;

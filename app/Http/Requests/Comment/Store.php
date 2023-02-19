@@ -7,12 +7,12 @@ use Illuminate\Foundation\Http\FormRequest;
 class Store extends FormRequest
 {
 
-    public function authorize()
+    public function authorize() : bool
     {
         return true;
     }
     
-    public function rules()
+    public function rules() : array
     {
         return [
             'for' =>  'in:film,serial|nullable',

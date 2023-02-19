@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Comment\Status;
+use Illuminate\Http\JsonResponse;
 use App\Models\Film as ModelsFilm;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Gate;
@@ -21,7 +22,7 @@ class Comment extends Controller
     /**
      * Сохранить сообщение
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request) : JsonResponse
     {
         $user = auth()->id() ?? ModelsUser::where('name','Guest')->firstOrfail()->id;
         
@@ -49,7 +50,7 @@ class Comment extends Controller
     /**
      * Изменить сообщение
      */
-    public function update(UpdateRequest $request,int $id)
+    public function update(UpdateRequest $request, int $id) : JsonResponse
     {
         $comment = ModelsComment::findOrFail($id);
 
@@ -65,7 +66,7 @@ class Comment extends Controller
     /**
      * Удалить сообщение
      */
-    public function destroy(int $id)
+    public function destroy(int $id) : JsonResponse
     {
         $comment =  ModelsComment::findOrfail($id);
 
