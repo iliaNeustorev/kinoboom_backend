@@ -19,11 +19,11 @@ class Controller extends BaseController
     /**
      * Сформировать url картинки
      */
-    protected function getUrlPicture(Paginator $collection, string $pathStorage) : Collection
+    protected function setUrlPicture(Paginator $collection, string $pathStorage) : Collection
     {
-       return $collection->transform(function($film) use ($pathStorage){
-            $film->urlPicture = url("$pathStorage/$film->picture");
-            return $film;
+       return $collection->transform(function($elem) use ($pathStorage){
+            $elem->urlPicture = url("$pathStorage/$elem->picture");
+            return $elem;
        });
     }
 
@@ -44,7 +44,6 @@ class Controller extends BaseController
     protected function yourPaginator(array $collection, int $per_page, Request $request) : Paginator
     {
         $total = count($collection);
-        $per_page = $per_page;
         $current_page = $request->page ?? 1;
 
         $starting_point = ($current_page * $per_page) - $per_page;

@@ -19,7 +19,7 @@ class Film extends Controller
         $films = ModelsFilm::orderByDesc('created_at')
             ->withCount(['comments' => ModelsComment::getWithStatus(CommentStatus::ACCEPT)])
             ->paginate(4);
-        parent::getUrlPicture($films,"storage/img/films");
+        parent::setUrlPicture($films,"storage/img/films");
         return $films;
     }
    

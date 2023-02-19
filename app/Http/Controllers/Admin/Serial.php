@@ -19,7 +19,7 @@ class Serial extends Controller
     {
         $sort = parent::validFieldSort(request(), ['rating','year_release','name','slug','created_at']);
         $serials = ModelsSerial::orderBy($sort['column'], $sort['direction'])->paginate(5);
-        parent::getUrlPicture($serials,"storage/img/serials");
+        parent::setUrlPicture($serials,"storage/img/serials");
         $count = ModelsSerial::onlyTrashed()->count();
         return compact('serials','count');
     }
@@ -58,7 +58,7 @@ class Serial extends Controller
         } 
         else 
         {
-         parent::getUrlPicture($serial,"storage/img/serials");
+         parent::setUrlPicture($serial,"storage/img/serials");
          return $serial->shift();
         }
     }

@@ -19,7 +19,7 @@ class Film extends Controller
     {
         $sort = parent::validFieldSort(request(), ['rating','year_release','name','slug','created_at']);
         $films = ModelsFilm::orderBy($sort['column'], $sort['direction'])->paginate(5);
-        parent::getUrlPicture($films,"storage/img/films");
+        parent::setUrlPicture($films,"storage/img/films");
         $count = ModelsFilm::onlyTrashed()->count();
         return compact('films','count');
     }
@@ -58,7 +58,7 @@ class Film extends Controller
         } 
         else 
         {
-         parent::getUrlPicture($film,"storage/img/films");
+         parent::setUrlPicture($film,"storage/img/films");
          return $film->shift();
         }
     }
