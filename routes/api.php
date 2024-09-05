@@ -6,12 +6,12 @@ use App\Http\Controllers\Home as HomeController;
 use App\Http\Controllers\Like as LikeController;
 use App\Http\Controllers\Serial as SerialController;
 use App\Http\Controllers\Review as ReviewController;
-use App\Http\Controllers\Profile as ProfileContorller;
+use App\Http\Controllers\Profile as ProfileController;
 use App\Http\Controllers\Comment as CommentController;
 use App\Http\Controllers\Auth\Login as LoginController;
 use App\Http\Controllers\Admin\Main as AdminMainController;
 use App\Http\Controllers\Admin\Film as AdminFilmController;
-use App\Http\Controllers\Auth\Password as PasswordContoller;
+use App\Http\Controllers\Auth\Password as PasswordController;
 use App\Http\Controllers\Auth\Register as RegisterController;
 use App\Http\Controllers\Admin\Trash as AdminTrashController;
 use App\Http\Controllers\Admin\Review as AdminReviewController;
@@ -41,17 +41,17 @@ Route::group(['middleware' => ['web']], function () {
     Route::middleware('guest')->group(function(){
         Route::post('/login',[ LoginController::class, 'login' ]);
         Route::post('/register',[ RegisterController::class, 'register' ]);
-        Route::post('/forgot-password', [ PasswordContoller::class, 'forgotPassword' ]);
-        Route::post('/reset-password', [ PasswordContoller::class, 'resetPassword']);
+        Route::post('/forgot-password', [ PasswordController::class, 'forgotPassword' ]);
+        Route::post('/reset-password', [ PasswordController::class, 'resetPassword']);
     });
     Route::post('/logout',[ LoginController::class, 'logout' ])->middleware('auth');   
 });
 
 Route::prefix('/profile')->middleware('auth')->group( function () {
-    Route::put('/changeName', [ ProfileContorller::class, 'changeName' ]);
-    Route::put('/changePassword', [ ProfileContorller::class, 'changePassword']);
-    Route::put('/changeAvatar', [ ProfileContorller::class, 'changeAvatar']);
-    Route::put('/deleteAvatar', [ ProfileContorller::class, 'deleteAvatar']);
+    Route::put('/changeName', [ ProfileController::class, 'changeName' ]);
+    Route::put('/changePassword', [ ProfileController::class, 'changePassword']);
+    Route::put('/changeAvatar', [ ProfileController::class, 'changeAvatar']);
+    Route::put('/deleteAvatar', [ ProfileController::class, 'deleteAvatar']);
 });
 
 Route::prefix('/admin')->middleware(['auth','verified','can:admin'])->group(function(){

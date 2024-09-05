@@ -28,7 +28,7 @@ class Controller extends BaseController
     }
 
      /**
-     * Валидировать поле сориторовки
+     * Валидировать поле сортировки
      */
     protected function validFieldSort(Request $request, array $array) : array
     {
